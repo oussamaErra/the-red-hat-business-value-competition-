@@ -172,17 +172,18 @@ xg = XGBClassifier(n_estimators=1000,max_depth=2,learning_rate=0.01,nthread=-1,g
 rf = RandomForestClassifier(n_estimators=1000,max_depth=2)
 gbm=GradientBoostingClassifier(n_estimators=1000,learning_rate=0.01,max_depth=2)
 models=[xg,rf,gbm]
-k=1
+j=1
+data = np.zeros((X.shape[0] , len(models)))
 for model in models:
 
     split = StratifiedKFold(y,n_folds=5,shuffle=False)
-    data = np.zeros((X.shape[0] , len(models)))
+    
 
     for k , (train_test) in enumerate(split):
         X_train , X_test , y_train,y_test = X[train] , X[test] , y[train] , y[test]
         model.fit(X_train,y_train)
-        data[test][k] = model.predict_proba(X_test)
-    k=k+1
+        data[test][j] = model.predict_proba(X_test)
+    j=j+1
 # get to the blending part
 lrg = LogisticRegression()
 split_2= StratifiedKFold(y,n_folds=10)
